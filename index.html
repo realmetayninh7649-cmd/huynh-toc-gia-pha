@@ -37,6 +37,7 @@
 .gp-document-link{display:block;margin:5px 0;padding:6px 8px;background:#f7ead7;border-radius:3px;font-size:11px;font-weight:600}
 .gp-privacy-controls{border:1px solid #e0cda7;padding:14px;border-radius:5px;background:#faf3e4;gap:10px}.gp-privacy-controls .form-check{font-size:12px;font-weight:600}
 @media(max-width:760px){.gp-gallery-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.gp-gallery-item img,.gp-pdf-mark{height:130px}.gp-media-editor{padding:12px}.gp-media-line{gap:7px}.tree-toolbar #tree-print{min-width:100%}}
+.tree-scroll{-webkit-overflow-scrolling:touch;touch-action:pan-x pan-y}
 @media print{.site-header,.ornament-top,.site-footer,.tree-toolbar,.tree-panel-top,.tree-bottom,.hint-block,.page-heading p{display:none!important}body{background:white!important}.view{display:none!important}#view-tree{display:block!important;margin:0;padding:0!important}.tree-scroll{height:auto!important;overflow:visible!important}.tree-panel{box-shadow:none!important;border:0!important}#tree-zoom-box,#tree-canvas{transform:none!important}.page-heading h1{margin:0 0 10px!important}}
 
 /* Ảnh bốn vị tiền nhân — hiển thị trực tiếp từ ảnh PNG nguyên vẹn, không chỉnh sửa khuôn mặt. */
@@ -105,8 +106,8 @@
   </section>
   <section id="view-tree" class="view container view-standard">
     <div class="page-heading"><span class="overline">PHẢ HỆ CÁC ĐỜI</span><h1>Cây gia phả</h1><p>Đường nối thể hiện quan hệ cha mẹ – con cái theo hồ sơ đã nhập. Vợ chồng được đặt chung một khung như sơ đồ truyền thống.</p></div>
-    <div class="toolbar tree-toolbar"><label class="control-label">Nhánh phả hệ <select id="tree-root" class="select-field"></select></label><label class="control-label">Thu phóng <span id="zoom-number">100%</span><input id="tree-zoom" type="range" min="65" max="130" value="100" step="5"></label><button type="button" id="tree-reset" class="btn btn-outline">Về giữa sơ đồ</button><button type="button" id="tree-print" class="btn btn-outline">⎙ In cây gia phả</button><button type="button" class="btn btn-primary" data-go="admin" data-admin-type="person">+ Thêm người</button></div>
-    <div class="tree-panel"><div class="tree-panel-top"><span class="legend-label"><span class="legend-line"></span> Dòng nối huyết hệ</span><span id="tree-count" class="muted"></span></div><div id="tree-scroll" class="tree-scroll"><div id="tree-zoom-box"><div id="tree-canvas"></div></div></div><div class="tree-bottom">↔ Vuốt ngang để xem các nhánh · Chạm vào từng tên để mở hồ sơ</div></div>
+    <div class="toolbar tree-toolbar"><label class="control-label">Nhánh phả hệ <select id="tree-root" class="select-field"></select></label><label class="control-label">Thu phóng <span id="zoom-number">100%</span><input id="tree-zoom" type="range" min="35" max="200" value="100" step="1" aria-label="Thu phóng cây gia phả"></label><button type="button" id="tree-reset" class="btn btn-outline">Về giữa sơ đồ</button><button type="button" id="tree-print" class="btn btn-outline">⎙ In cây gia phả</button><button type="button" class="btn btn-primary" data-go="admin" data-admin-type="person">+ Thêm người</button></div>
+    <div class="tree-panel"><div class="tree-panel-top"><span class="legend-label"><span class="legend-line"></span> Dòng nối huyết hệ</span><span id="tree-count" class="muted"></span></div><div id="tree-scroll" class="tree-scroll"><div id="tree-zoom-box"><div id="tree-canvas"></div></div></div><div class="tree-bottom">↔ Vuốt để di chuyển · Chụm hai ngón để thu nhỏ/phóng to · Chạm tên để mở hồ sơ</div></div>
     <div class="hint-block"><b>Về thế thứ:</b> Đời được suy ra từ quan hệ cha mẹ đã nhập. Những người chưa nối với tiền nhân sẽ được trình bày thành gốc phả hệ riêng. Dữ liệu đang trong thời kỳ đối chiếu.</div>
   </section>
   <section id="view-members" class="view container view-standard"><div class="page-heading"><span class="overline">NHÂN VẬT TRONG GIA PHẢ</span><h1>Hồ sơ thành viên</h1><p>Mỗi người một trang ghi chép, liên kết với cha mẹ, phối ngẫu, con cháu và tư liệu có liên quan.</p></div><div class="toolbar"><input id="member-search" class="search-field" type="search" placeholder="Tìm tên, địa danh, năm sinh…"><select id="member-generation" class="select-field"><option value="all">Tất cả các đời</option></select><button class="btn btn-outline" data-go="admin" data-admin-type="person">+ Thêm hồ sơ</button></div><p class="results-caption" id="member-count"></p><div class="member-grid" id="member-grid"></div></section>
@@ -158,7 +159,7 @@ const cloud=Boolean(text(config.url)&&text(config.anonKey));
 const sbUrl=text(config.url).replace(/\/+$/,'');
 let session=null;
 try{session=cloud?JSON.parse(sessionStorage.getItem('gp-session')||'null'):null}catch{}
-let state={...structuredClone(SEED),view:'home',root:'all',zoom:100,storyFilter:'Tất cả',editTab:'person',editing:null,cloudError:'',loading:cloud};
+let state={...structuredClone(SEED),view:'home',root:'all',zoom:(window.matchMedia('(max-width:760px)').matches?65:100),storyFilter:'Tất cả',editTab:'person',editing:null,cloudError:'',loading:cloud};
 /* BỔ SUNG GIA PHẢ 2.0 — album ảnh và PDF, ký URL riêng tư, quyền quản trị */
 const MEDIA_BUCKET='gp-private';
 const ACCEPTED_MEDIA=new Set(['image/jpeg','image/png','image/webp','application/pdf']);
@@ -252,6 +253,76 @@ function renderTree(){renderTreeChoices();const el=$('#tree-canvas'),zoomBox=$('
  const labels=[...new Set(nodes.map(n=>n.rank))].sort((a,b)=>a-b).map(gen=>`<div class="tree-generation-label" style="top:${TOP+(gen-minRank)*STEP+39}px;left:15px">ĐỜI ${gen}</div>`).join('');
  const boxes=nodes.map(n=>{const p=n.p,sp=n.spouse;const half=x=>`<button class="tree-half" data-detail-person="${safe(x.id)}"><span class="tree-rank">Đời ${n.rank} · ${safe(x.role||((x.gender==='Nữ')?'Bà':'Ông'))}</span><strong>${safe(x.name)}</strong><small>${safe(years(x))}</small></button>`;return `<div class="tree-person ${sp?'person-couple':''}" style="left:${n.x}px;top:${n.y}px;width:${W}px;height:${H}px">${half(p)}${sp?half(sp):''}</div>`}).join('');
  el.innerHTML=`<svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" aria-hidden="true">${connectors.join('')}</svg>${labels}${boxes}`;el.style.width=width+'px';el.style.height=height+'px';el.dataset.focusX=String(roots[0]?.cx||width/2);const scale=state.zoom/100;el.style.transform=`scale(${scale})`;zoomBox.style.width=(width*scale)+'px';zoomBox.style.height=(height*scale)+'px';if(scroll&&scroll.clientWidth>0&&!scroll.dataset.initialized){scroll.scrollLeft=Math.max(0,(Number(el.dataset.focusX)*scale-scroll.clientWidth/2));scroll.dataset.initialized='yes'}}
+
+/* Thu phóng riêng sơ đồ: giữ điểm đang xem, không thay đổi zoom của cả trang. */
+function setTreeZoom(value, anchor) {
+  const sc=$('#tree-scroll'), canvas=$('#tree-canvas'), box=$('#tree-zoom-box');
+  const oldScale=(state.zoom||100)/100;
+  const zoom=Math.max(35,Math.min(200,Math.round(Number(value)||100)));
+  const x=anchor?.x??sc.clientWidth/2, y=anchor?.y??sc.clientHeight/2;
+  const worldX=anchor?.worldX??(sc.scrollLeft+x)/oldScale;
+  const worldY=anchor?.worldY??(sc.scrollTop+y)/oldScale;
+  state.zoom=zoom;
+  $('#zoom-number').textContent=zoom+'%';
+  $('#tree-zoom').value=zoom;
+  const scale=zoom/100;
+  canvas.style.transform='scale('+scale+')';
+  const w=parseFloat(canvas.style.width), h=parseFloat(canvas.style.height);
+  if(Number.isFinite(w)&&Number.isFinite(h)){
+    box.style.width=(w*scale)+'px';
+    box.style.height=(h*scale)+'px';
+    sc.scrollLeft=Math.max(0,worldX*scale-x);
+    sc.scrollTop=Math.max(0,worldY*scale-y);
+  }
+}
+function bindTreePinch() {
+  const sc=$('#tree-scroll');
+  let gesture=null,blockClickUntil=0;
+  const locate=touches=>{
+    const a=touches[0],b=touches[1],rect=sc.getBoundingClientRect();
+    return {
+      distance:Math.max(1,Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY)),
+      x:(a.clientX+b.clientX)/2-rect.left,
+      y:(a.clientY+b.clientY)/2-rect.top
+    };
+  };
+  sc.addEventListener('touchstart',e=>{
+    if(e.touches.length!==2)return;
+    const p=locate(e.touches),scale=state.zoom/100;
+    gesture={
+      distance:p.distance,
+      zoom:state.zoom,
+      worldX:(sc.scrollLeft+p.x)/scale,
+      worldY:(sc.scrollTop+p.y)/scale
+    };
+  },{passive:true});
+  sc.addEventListener('touchmove',e=>{
+    if(!gesture||e.touches.length!==2)return;
+    e.preventDefault();
+    const p=locate(e.touches);
+    setTreeZoom(gesture.zoom*p.distance/gesture.distance,{
+      x:p.x,y:p.y,worldX:gesture.worldX,worldY:gesture.worldY
+    });
+    blockClickUntil=Date.now()+450;
+  },{passive:false});
+  sc.addEventListener('touchend',e=>{
+    if(e.touches.length<2){
+      if(gesture)blockClickUntil=Date.now()+450;
+      gesture=null;
+    }
+  },{passive:true});
+  sc.addEventListener('touchcancel',()=>{gesture=null;},{passive:true});
+  sc.addEventListener('click',e=>{
+    if(Date.now()<blockClickUntil&&e.target.closest('[data-detail-person]')){
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  },true);
+  /* Ngăn Safari phóng cả trang thay vì chỉ phóng cây. */
+  sc.addEventListener('gesturestart',e=>e.preventDefault(),{passive:false});
+  sc.addEventListener('gesturechange',e=>e.preventDefault(),{passive:false});
+}
+
 function renderMembers(){const query=text($('#member-search').value).toLocaleLowerCase('vi');const genField=$('#member-generation');const previous=genField.value||'all';const values=[...new Set(state.persons.map(p=>generation(p.id)))].sort((a,b)=>a-b);genField.innerHTML='<option value="all">Tất cả các đời</option>'+values.map(g=>`<option value="${g}">Đời ${g}</option>`).join('');genField.value=values.includes(Number(previous))?previous:'all';const g=genField.value;const members=state.persons.filter(p=>(g==='all'||generation(p.id)===Number(g))&&[p.name,p.place,p.born,p.died,p.branch,p.role].join(' ').toLocaleLowerCase('vi').includes(query)).sort((a,b)=>generation(a.id)-generation(b.id)||byName(a,b));$('#member-count').textContent=`Đang hiển thị ${members.length} / ${state.persons.length} hồ sơ`;$('#member-grid').innerHTML=members.map(p=>`<button type="button" class="member-card" data-detail-person="${safe(p.id)}">${coverHtml('persons',p.id,p.name)}<span class="card-eyebrow">ĐỜI ${generation(p.id)} · ${safe(p.branch||'Chưa phân chi')}</span><strong>${safe(p.name)}</strong><small>${safe(years(p))}</small><small>${safe(p.role||'Thành viên phả hệ')}</small><span class="small-link">Xem hồ sơ →</span></button>`).join('')||emptyHtml('Không tìm thấy thành viên','Hãy thử tên khác hoặc chọn một đời khác.')}
 function renderStories(){const filters=['Tất cả',...new Set([...CATEGORIES,...state.stories.map(s=>s.category).filter(Boolean)])];$('#story-filters').innerHTML=filters.map(f=>`<button type="button" data-story-filter="${safe(f)}" class="${state.storyFilter===f?'is-current':''}">${safe(f)}</button>`).join('');const cards=state.stories.filter(s=>state.storyFilter==='Tất cả'||s.category===state.storyFilter);$('#story-grid').innerHTML=cards.map((s,i)=>{const cover=mediaCover('stories',s.id),art=cover?`<img class="gp-story-cover" src="${safe(urlSafe(cover.signedUrl))}" alt="Ảnh minh họa ${safe(s.title)}" loading="lazy">`:`<b>${safe((s.category||'Ký').slice(0,1))}</b>`;return `<button type="button" class="story-card" data-detail-story="${safe(s.id)}"><div class="story-art" style="${i%3===1?'background:linear-gradient(135deg,#85653c,#a68450)':i%3===2?'background:linear-gradient(135deg,#735c41,#a07a56)':''}">${art}</div><div class="story-body"><span class="card-eyebrow">${safe(s.category||'Phả ký')} ${s.date?'· '+safe(s.date):''}</span><h3>${safe(s.title)}</h3><p>${safe(s.summary||text(s.content).slice(0,170))}</p><span class="read-link">Đọc tiếp →</span></div></button>`}).join('')||emptyHtml('Chưa có bài phả ký','Vào Quản trị để biên soạn bài viết đầu tiên.')}
 function renderDocuments(){$('#document-grid').innerHTML=state.documents.map(d=>{const m=mediaOf('documents',d.id),photos=m.filter(x=>x.mime_type?.startsWith('image/')),files=m.filter(x=>x.mime_type==='application/pdf');const rows=m.map(x=>`<a href="${safe(urlSafe(x.signedUrl)||'#')}" target="_blank" rel="noopener noreferrer" class="gp-document-link">${x.mime_type==='application/pdf'?'▤ PDF':'▧ Ảnh'} · ${safe(x.caption||x.file_name||'Mở tệp')}</a>`).join('');return `<article class="document-card">${photos[0]?.signedUrl?`<img class="gp-document-cover" src="${safe(urlSafe(photos[0].signedUrl))}" alt="${safe(d.title)}" loading="lazy">`:`<div class="doc-icon">${d.type==='Ảnh tư liệu'?'▧':d.type==='Văn bia, mộ chí'?'◈':'▤'}</div>`}<span class="card-eyebrow">${safe(d.type||'Tư liệu')}</span><h3>${safe(d.title)}</h3><p>${safe(d.description||'Chưa có mô tả.')}</p><p><small>Nguồn: ${safe(d.source||'Chưa ghi')}</small></p>${rows}${urlSafe(d.url)?`<a href="${safe(urlSafe(d.url))}" target="_blank" rel="noopener noreferrer">Mở liên kết ↗</a>`:''}</article>`}).join('')||emptyHtml('Thư khố đang được bổ sung','Chưa đăng hình ảnh hoặc tư liệu; mục này sẽ lưu danh mục nguồn dẫn để tiện khảo chứng.')}
@@ -333,7 +404,7 @@ function openEdit(kind,id){if(!isAdmin())return;state.editTab=kind;state.editing
 function registerEvents(){document.addEventListener('click',async e=>{const t=e.target.closest('button');if(!t)return;if(t.matches('[data-go]')){state.editing=null;if(t.dataset.adminType)state.editTab=t.dataset.adminType;navigate(t.dataset.go);return}if(t.matches('[data-view]')){state.editing=null;navigate(t.dataset.view);return}if(t.id==='mobile-menu'){const shown=$('.main-nav').classList.toggle('menu-open');t.setAttribute('aria-expanded',String(shown));return}if(t.id==='tree-print'){window.print();return}if(t.id==='tree-reset'){renderTree();const sc=$('#tree-scroll');sc.scrollLeft=Math.max(0,(Number($('#tree-canvas').dataset.focusX)*state.zoom/100-sc.clientWidth/2));sc.scrollTop=0;return}if(t.matches('[data-detail-person]')){detailPerson(t.dataset.detailPerson);return}if(t.matches('[data-detail-story]')){detailStory(t.dataset.detailStory);return}if(t.matches('[data-story-filter]')){state.storyFilter=t.dataset.storyFilter;renderStories();return}if(t.matches('[data-edit-tab]')){state.editTab=t.dataset.editTab;state.editing=null;renderAdmin();return}if(t.matches('[data-edit-record]')){state.editTab=t.dataset.kind;state.editing=t.dataset.editRecord;renderAdmin();$('#admin-content')?.scrollIntoView({behavior:'smooth',block:'start'});return}if(t.matches('[data-delete-record]')){await deleteRecord(t.dataset.kind,t.dataset.deleteRecord);return}if(t.matches('[data-edit-person]')){openEdit('person',t.dataset.editPerson);return}if(t.matches('[data-edit-story]')){openEdit('story',t.dataset.editStory);return}if(t.id==='cancel-edit'){state.editing=null;renderAdmin();return}if(t.id==='export-json'){exportJson();return}if(t.id==='import-confirm'){await importJson();return}if(t.matches('[data-media-remove]')){pendingMedia=pendingMedia.filter(m=>m.id!==t.dataset.mediaRemove);renderMediaEditor();return}if(t.matches('[data-media-delete]')){await removeMediaClick(t.dataset.mediaDelete);return}if(t.id==='logout'){state.adminVerified=false;pendingMedia=[];session=null;try{sessionStorage.removeItem('gp-session')}catch{}state.persons=[];state.stories=[];state.documents=[];state.media=[];renderAll();await loadCloud();toast('Đã đăng xuất.');return}if(t.id==='detail-close'){closeDetail();return}});
  document.addEventListener('submit',async e=>{if(e.target.getAttribute('id')==='editor-form'){e.preventDefault();const submit=e.target.querySelector('[type=submit]');submit.disabled=true;try{await submitEditor(e.target)}finally{submit.disabled=false}}else if(e.target.getAttribute('id')==='login-form'){e.preventDefault();await login(e.target)}});
  document.addEventListener('change',e=>{if(e.target.id==='gp-media-files'){stageMediaFiles(e.target.files);e.target.value=''}});document.addEventListener('input',e=>{if(e.target.matches('[data-media-caption]')){const p=pendingMedia.find(x=>x.id===e.target.dataset.mediaCaption);if(p)p.caption=e.target.value}});
- $('#tree-root').addEventListener('change',e=>{state.root=e.target.value;$('#tree-scroll').dataset.initialized='';renderTree();$('#tree-scroll').scrollTop=0});$('#tree-zoom').addEventListener('input',e=>{state.zoom=Number(e.target.value);renderTree()});$('#member-search').addEventListener('input',renderMembers);$('#member-generation').addEventListener('change',renderMembers);$('#detail-dialog').addEventListener('click',e=>{if(e.target.id==='detail-dialog')closeDetail()});window.addEventListener('hashchange',()=>{const hash=location.hash.slice(1);if(['home','tree','members','stories','library','admin'].includes(hash))navigate(hash)})}
+ $('#tree-root').addEventListener('change',e=>{state.root=e.target.value;$('#tree-scroll').dataset.initialized='';renderTree();$('#tree-scroll').scrollTop=0});$('#tree-zoom').addEventListener('input',e=>{setTreeZoom(Number(e.target.value))});$('#member-search').addEventListener('input',renderMembers);$('#member-generation').addEventListener('change',renderMembers);$('#detail-dialog').addEventListener('click',e=>{if(e.target.id==='detail-dialog')closeDetail()});window.addEventListener('hashchange',()=>{const hash=location.hash.slice(1);if(['home','tree','members','stories','library','admin'].includes(hash))navigate(hash)});bindTreePinch()}
 async function init(){
  registerEvents();renderAll();
  if(cloud){
