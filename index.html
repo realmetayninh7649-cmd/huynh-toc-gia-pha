@@ -60,6 +60,7 @@
     window.GP_SUPABASE = { url: 'https://uzsrbutpzjatcoavcwso.supabase.co', anonKey: 'sb_publishable_kaTSI3pZn_-ckDIdnxZz4w_JVPtviUj' };
   </script>
   
+<link rel="stylesheet" href="./gia-pha-mo-rong.css?v=1">
 </head>
 <body>
 <div class="ornament-top" aria-hidden="true"></div>
@@ -75,6 +76,8 @@
       <button data-view="members">Thành viên</button>
       <button data-view="stories">Phả ký</button>
       <button data-view="library">Tư liệu</button>
+      <button data-view="memorials">Tưởng niệm</button>
+      <button data-view="graves">Thông tin bia mộ</button>
       <button data-view="admin" class="nav-admin">Quản trị</button>
     </nav>
     <button class="mobile-menu" id="mobile-menu" aria-label="Hiện menu" aria-expanded="false">☰</button>
@@ -107,19 +110,32 @@
         <button class="feature-card" type="button" data-go="stories"><span class="feature-num">02</span><div class="feature-mark">記</div><h3>Phả ký dòng họ</h3><p>Ghi nguồn gốc, công cuộc khai cơ lập nghiệp, nếp nhà, tiểu sử người xưa và những chuyện truyền đời.</p><span class="feature-link">Đọc gia sử <b>↗</b></span></button>
         <button class="feature-card" type="button" data-go="library"><span class="feature-num">03</span><div class="feature-mark">藏</div><h3>Thư khố tư liệu</h3><p>Gìn giữ ảnh xưa, giấy tờ, gia phả cũ, bia mộ và nguồn khảo chứng để hậu duệ tiện lần tìm.</p><span class="feature-link">Xem thư khố <b>↗</b></span></button>
       </div>
+      <section class="heritage-section" id="home-memorial-section" aria-labelledby="home-memorial-title">
+       <div class="heritage-heading"><div><span class="overline">NHỚ ƠN TIỀN NHÂN</span><h2 id="home-memorial-title">Tưởng niệm · Kỷ niệm ngày mất</h2><p>Nén hương lòng hướng về những người đã khuất, gìn giữ ngày giỗ và dấu tích gia phong.</p></div></div>
+       <div id="home-memorial"></div>
+      </section>
       <section class="home-chronicle"><div class="chronicle-icon">✥</div><div><span class="overline">LỜI NHẮN GỬI HẬU DUỆ</span><h2>Giữ lấy một mối dây nguồn cội</h2><p>Gia phả chẳng những là chỗ chép tên tuổi người đã khuất, mà còn là lời nhắc cho con cháu biết mình từ đâu mà có, biết kính trên nhường dưới, nhớ công lao của tiền nhân. Những điều chưa rõ xin để ngỏ, đợi tài liệu chứng minh, chớ vì muốn đủ câu chuyện mà ghi thêm điều chưa chắc.</p></div></section>
     </div>
   </section>
   <section id="view-tree" class="view container view-standard">
     <div class="page-heading"><span class="overline">PHẢ HỆ CÁC ĐỜI</span><h1>Cây gia phả</h1><p>Đường nối thể hiện quan hệ cha mẹ – con cái theo hồ sơ đã nhập. Vợ chồng được đặt chung một khung như sơ đồ truyền thống.</p></div>
-    <div class="toolbar tree-toolbar"><label class="control-label">Nhánh phả hệ <select id="tree-root" class="select-field"></select></label><label class="control-label">Thu phóng <span id="zoom-number">100%</span><input id="tree-zoom" type="range" min="35" max="200" value="100" step="1" aria-label="Thu phóng cây gia phả"></label><button type="button" id="tree-reset" class="btn btn-outline">Về giữa sơ đồ</button><button type="button" id="tree-print" class="btn btn-outline">⎙ In cây gia phả</button><button type="button" class="btn btn-primary" data-go="admin" data-admin-type="person">+ Thêm người</button></div>
+    <div class="toolbar tree-toolbar"><label class="control-label">Nhánh phả hệ <select id="tree-root" class="select-field"></select></label><label class="control-label">Thu phóng <span id="zoom-number">100%</span><input id="tree-zoom" type="range" min="0.05" max="200" value="100" step="0.05" aria-label="Thu phóng cây gia phả"></label><button type="button" id="tree-fit" class="btn btn-outline">⊞ Xem toàn cây</button><button type="button" id="tree-reset" class="btn btn-outline">Về gốc</button><button type="button" id="tree-print" class="btn btn-outline">⎙ In cây gia phả</button><button type="button" class="btn btn-primary" data-go="admin" data-admin-type="person">+ Thêm người</button></div>
+    <p class="tree-view-note">Dùng <strong>Xem toàn cây</strong> để nhìn tổng thể, sau đó phóng to hoặc chọn từng nhánh để đọc tên.</p>
     <div class="tree-panel"><div class="tree-panel-top"><span class="legend-label"><span class="legend-line"></span> Dòng nối huyết hệ</span><span id="tree-count" class="muted"></span></div><div id="tree-scroll" class="tree-scroll"><div id="tree-zoom-box"><div id="tree-canvas"></div></div></div><div class="tree-bottom">↔ Vuốt để di chuyển · Chụm hai ngón để thu nhỏ/phóng to · Chạm tên để mở hồ sơ</div></div>
     <div class="hint-block"><b>Về thế thứ:</b> Đời được suy ra từ quan hệ cha mẹ đã nhập. Những người chưa nối với tiền nhân sẽ được trình bày thành gốc phả hệ riêng. Dữ liệu đang trong thời kỳ đối chiếu.</div>
   </section>
   <section id="view-members" class="view container view-standard"><div class="page-heading"><span class="overline">NHÂN VẬT TRONG GIA PHẢ</span><h1>Hồ sơ thành viên</h1><p>Mỗi người một trang ghi chép, liên kết với cha mẹ, phối ngẫu, con cháu và tư liệu có liên quan.</p></div><div class="toolbar"><input id="member-search" class="search-field" type="search" placeholder="Tìm tên, địa danh, năm sinh…"><select id="member-generation" class="select-field"><option value="all">Tất cả các đời</option></select><button class="btn btn-outline" data-go="admin" data-admin-type="person">+ Thêm hồ sơ</button></div><p class="results-caption" id="member-count"></p><div class="member-grid" id="member-grid"></div></section>
   <section id="view-stories" class="view container view-standard"><div class="page-heading"><span class="overline">GIA SỬ LƯU TRUYỀN</span><h1>Phả ký dòng họ</h1><p>Những trang ghi chép về nguồn gốc, cuộc đời tiền nhân, công việc khai cơ, gia phong cùng chuyện xưa nơi quê nhà.</p></div><div id="story-filters" class="filter-tabs"></div><div class="story-grid" id="story-grid"></div></section>
   <section id="view-library" class="view container view-standard"><div class="page-heading"><span class="overline">LƯU GIỮ CHỨNG TÍCH</span><h1>Thư khố tư liệu</h1><p>Danh mục hình ảnh, văn bản, mộ chí, văn bằng, ghi chép và nguồn dẫn liên quan tới gia sử.</p></div><div class="hint-block"><b>Nguyên tắc khảo chứng:</b> Nên ghi rõ xuất xứ, người cung cấp, năm chụp hoặc số hiệu tài liệu. Liên kết tại đây chỉ là đường dẫn; ảnh và tài liệu cần được lưu riêng trên kho an toàn.</div><div class="document-grid" id="document-grid"></div></section>
-  <section id="view-admin" class="view container view-standard"><div class="page-heading"><span class="overline">GHI CHÉP VÀ CHỈNH LÝ</span><h1>Quản trị gia phả</h1><p>Nhập từng hồ sơ, chọn cha mẹ để cây tự nối, biên soạn phả ký và lưu tư liệu khảo chứng.</p></div><div id="admin-status" class="admin-status"></div><div id="admin-auth"></div><div id="admin-workspace"><div class="admin-tabs" id="admin-tabs"><button data-edit-tab="person" class="is-current">Thành viên</button><button data-edit-tab="story">Phả ký</button><button data-edit-tab="document">Tư liệu</button><button data-edit-tab="backup">Sao lưu dữ liệu</button></div><div class="admin-panel" id="admin-content"></div></div></section>
+  <section id="view-memorials" class="view container view-standard">
+    <div class="page-heading"><span class="overline">NHỚ ƠN TIỀN NHÂN</span><h1>Tưởng niệm · Kỷ niệm ngày mất</h1><p>Chơn dung, ngày mất và những trang tưởng niệm người thân đã khuất của dòng họ.</p></div>
+    <div class="heritage-list" id="memorial-list"></div><div class="heritage-pages"><button type="button" class="btn btn-outline" id="memorial-more" hidden>Xem thêm bài tưởng niệm</button></div>
+  </section>
+  <section id="view-graves" class="view container view-standard">
+    <div class="page-heading"><span class="overline">DẤU TÍCH TIỀN NHÂN</span><h1>Thông tin bia mộ</h1><p>Hình ảnh, nơi an táng, văn bia và nguồn tư liệu đối chiếu của tiền nhân.</p></div>
+    <div class="heritage-list" id="grave-list"></div>
+  </section>
+  <section id="view-admin" class="view container view-standard"><div class="page-heading"><span class="overline">GHI CHÉP VÀ CHỈNH LÝ</span><h1>Quản trị gia phả</h1><p>Nhập từng hồ sơ, chọn cha mẹ để cây tự nối, biên soạn phả ký và lưu tư liệu khảo chứng.</p></div><div id="admin-status" class="admin-status"></div><div id="admin-auth"></div><div id="admin-workspace"><div class="admin-tabs" id="admin-tabs"><button data-edit-tab="person" class="is-current">Thành viên</button><button data-edit-tab="story">Phả ký & Tưởng niệm</button><button data-edit-tab="document">Tư liệu & Bia mộ</button><button data-edit-tab="backup">Sao lưu dữ liệu</button></div><div class="admin-panel" id="admin-content"></div></div></section>
 </main>
 <footer class="site-footer"><div class="container footer-inner"><div class="footer-identity"><span class="footer-seal">譜</span><div><b>GIA PHẢ HỌ HUỲNH</b><small>PHƯỚC THẠNH – GÒ DẦU – TÂY NINH</small></div></div><p>Gìn giữ cội nguồn · Nối nhịp hậu duệ<br><small>Biên soạn theo tư liệu gia đình; tiếp tục bổ sung, hiệu đính.</small></p><span class="footer-year">© <span id="copyright-year"></span></span></div></footer>
 <dialog id="detail-dialog" class="detail-dialog"><button class="dialog-close" id="detail-close" aria-label="Đóng">×</button><div id="detail-content"></div></dialog>
@@ -442,5 +458,6 @@ init();
 
 </script>
 <script src="./gia-pha-lien-ket-gia-dinh.js" defer></script>
+<script src="./gia-pha-mo-rong.js?v=1" defer></script>
 </body>
 </html>
