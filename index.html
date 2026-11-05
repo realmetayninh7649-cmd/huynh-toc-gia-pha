@@ -37,7 +37,20 @@
 .gp-document-link{display:block;margin:5px 0;padding:6px 8px;background:#f7ead7;border-radius:3px;font-size:11px;font-weight:600}
 .gp-privacy-controls{border:1px solid #e0cda7;padding:14px;border-radius:5px;background:#faf3e4;gap:10px}.gp-privacy-controls .form-check{font-size:12px;font-weight:600}
 @media(max-width:760px){.gp-gallery-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.gp-gallery-item img,.gp-pdf-mark{height:130px}.gp-media-editor{padding:12px}.gp-media-line{gap:7px}.tree-toolbar #tree-print{min-width:100%}}
-.tree-scroll{-webkit-overflow-scrolling:touch;touch-action:pan-x pan-y}
+.tree-scroll{-webkit-overflow-scrolling:touch;touch-action:pan-x pan-y;
+  background-color:#f8e8bd;
+  background-image:
+    radial-gradient(ellipse 150px 55px at 10% 12%,rgba(255,255,247,.42),transparent 85%),
+    radial-gradient(ellipse 210px 65px at 92% 24%,rgba(255,255,246,.36),transparent 85%),
+    radial-gradient(ellipse 190px 55px at 7% 77%,rgba(255,255,247,.31),transparent 85%),
+    radial-gradient(ellipse 200px 55px at 90% 85%,rgba(255,255,246,.28),transparent 85%),
+    repeating-linear-gradient(0deg,transparent 0,transparent 72px,rgba(171,122,55,.055) 73px);
+  box-shadow:inset 0 0 0 7px rgba(255,250,231,.68),inset 0 0 0 9px rgba(144,77,39,.27),inset 0 0 0 15px rgba(255,250,231,.36);
+}
+.tree-scroll:before{content:'☁';position:sticky;top:35px;left:0;display:block;width:0;height:0;white-space:nowrap;font:normal 165px/1 var(--serif);color:rgba(255,255,255,.17);pointer-events:none;z-index:0}
+.tree-scroll:after{content:'☁';position:sticky;bottom:100px;left:calc(100% - 150px);display:block;width:0;height:0;white-space:nowrap;font:normal 140px/1 var(--serif);color:rgba(255,255,255,.16);pointer-events:none;z-index:0}
+.tree-panel{border:2px solid #bd9151;box-shadow:0 0 0 4px rgba(250,239,208,.85),0 8px 25px rgba(74,43,25,.09)}
+
 @media print{.site-header,.ornament-top,.site-footer,.tree-toolbar,.tree-panel-top,.tree-bottom,.hint-block,.page-heading p{display:none!important}body{background:white!important}.view{display:none!important}#view-tree{display:block!important;margin:0;padding:0!important}.tree-scroll{height:auto!important;overflow:visible!important}.tree-panel{box-shadow:none!important;border:0!important}#tree-zoom-box,#tree-canvas{transform:none!important}.page-heading h1{margin:0 0 10px!important}}
 
 /* Ảnh bốn vị tiền nhân — hiển thị trực tiếp từ ảnh PNG nguyên vẹn, không chỉnh sửa khuôn mặt. */
@@ -252,27 +265,35 @@ function renderTree(){renderTreeChoices();const el=$('#tree-canvas'),zoomBox=$('
  const connectors=[];for(const n of nodes){if(!n.children.length)continue;const y1=n.y+H,y2=n.children[0].y,mid=y1+(y2-y1)*.47;if(n.children.length===1){const child=n.children[0];connectors.push(`<path d="M${n.cx} ${y1} V${mid} H${child.cx} V${child.y}"/>`)}else{const min=Math.min(...n.children.map(c=>c.cx)),max=Math.max(...n.children.map(c=>c.cx));connectors.push(`<path d="M${n.cx} ${y1} V${mid} M${min} ${mid} H${max}"/>`);n.children.forEach(child=>connectors.push(`<path d="M${child.cx} ${mid} V${child.y}"/>`))}}
  const labels=[...new Set(nodes.map(n=>n.rank))].sort((a,b)=>a-b).map(gen=>`<div class="tree-generation-label" style="top:${TOP+(gen-minRank)*STEP+39}px;left:15px">ĐỜI ${gen}</div>`).join('');
  const boxes=nodes.map(n=>{const p=n.p,sp=n.spouse;const half=x=>`<button class="tree-half" data-detail-person="${safe(x.id)}"><span class="tree-rank">Đời ${n.rank} · ${safe(x.role||((x.gender==='Nữ')?'Bà':'Ông'))}</span><strong>${safe(x.name)}</strong><small>${safe(years(x))}</small></button>`;return `<div class="tree-person ${sp?'person-couple':''}" style="left:${n.x}px;top:${n.y}px;width:${W}px;height:${H}px">${half(p)}${sp?half(sp):''}</div>`}).join('');
- el.innerHTML=`<svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" aria-hidden="true">${connectors.join('')}</svg>${labels}${boxes}`;el.style.width=width+'px';el.style.height=height+'px';el.dataset.focusX=String(roots[0]?.cx||width/2);const scale=state.zoom/100;el.style.transform=`scale(${scale})`;zoomBox.style.width=(width*scale)+'px';zoomBox.style.height=(height*scale)+'px';if(scroll&&scroll.clientWidth>0&&!scroll.dataset.initialized){scroll.scrollLeft=Math.max(0,(Number(el.dataset.focusX)*scale-scroll.clientWidth/2));scroll.dataset.initialized='yes'}}
+ el.innerHTML=`<svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" aria-hidden="true">${connectors.join('')}</svg>${labels}${boxes}`;el.style.width=width+'px';el.style.height=height+'px';el.dataset.focusX=String(roots[0]?.cx||width/2);const scale=state.zoom/100;el.style.transform=`scale(${scale})`;zoomBox.style.width=(width*scale)+'px';zoomBox.style.height=(height*scale)+'px';if(scroll&&scroll.clientWidth>0){centerTreeAxis();}}
 
 /* Thu phóng riêng sơ đồ: giữ điểm đang xem, không thay đổi zoom của cả trang. */
-function setTreeZoom(value, anchor) {
+/* Giữ trục gốc của phả hệ ở chính giữa khung nhìn khi thay đổi tỷ lệ. */
+function centerTreeAxis(){
+  const sc=$('#tree-scroll'),box=$('#tree-zoom-box'),canvas=$('#tree-canvas');
+  if(!sc||!box||!canvas||!sc.clientWidth)return;
+  const scale=state.zoom/100, w=parseFloat(canvas.style.width)||0;
+  const scaledWidth=w*scale;
+  // Cây nhỏ hơn khung thì căn giữa toàn bộ; cây rộng thì căn trục gốc.
+  const offset=Math.max(0,(sc.clientWidth-scaledWidth)/2);
+  box.style.marginLeft=offset+'px';
+  box.style.marginRight='0px';
+  const focus=(parseFloat(canvas.dataset.focusX)||w/2)*scale+offset;
+  sc.scrollLeft=Math.max(0,focus-sc.clientWidth/2);
+}
+function setTreeZoom(value) {
   const sc=$('#tree-scroll'), canvas=$('#tree-canvas'), box=$('#tree-zoom-box');
-  const oldScale=(state.zoom||100)/100;
   const zoom=Math.max(35,Math.min(200,Math.round(Number(value)||100)));
-  const x=anchor?.x??sc.clientWidth/2, y=anchor?.y??sc.clientHeight/2;
-  const worldX=anchor?.worldX??(sc.scrollLeft+x)/oldScale;
-  const worldY=anchor?.worldY??(sc.scrollTop+y)/oldScale;
   state.zoom=zoom;
   $('#zoom-number').textContent=zoom+'%';
   $('#tree-zoom').value=zoom;
   const scale=zoom/100;
   canvas.style.transform='scale('+scale+')';
-  const w=parseFloat(canvas.style.width), h=parseFloat(canvas.style.height);
+  const w=parseFloat(canvas.style.width),h=parseFloat(canvas.style.height);
   if(Number.isFinite(w)&&Number.isFinite(h)){
     box.style.width=(w*scale)+'px';
     box.style.height=(h*scale)+'px';
-    sc.scrollLeft=Math.max(0,worldX*scale-x);
-    sc.scrollTop=Math.max(0,worldY*scale-y);
+    centerTreeAxis();
   }
 }
 function bindTreePinch() {
@@ -300,9 +321,7 @@ function bindTreePinch() {
     if(!gesture||e.touches.length!==2)return;
     e.preventDefault();
     const p=locate(e.touches);
-    setTreeZoom(gesture.zoom*p.distance/gesture.distance,{
-      x:p.x,y:p.y,worldX:gesture.worldX,worldY:gesture.worldY
-    });
+    setTreeZoom(gesture.zoom*p.distance/gesture.distance);
     blockClickUntil=Date.now()+450;
   },{passive:false});
   sc.addEventListener('touchend',e=>{
@@ -321,6 +340,7 @@ function bindTreePinch() {
   /* Ngăn Safari phóng cả trang thay vì chỉ phóng cây. */
   sc.addEventListener('gesturestart',e=>e.preventDefault(),{passive:false});
   sc.addEventListener('gesturechange',e=>e.preventDefault(),{passive:false});
+  window.addEventListener('resize',()=>{if(state.view==='tree')centerTreeAxis();});
 }
 
 function renderMembers(){const query=text($('#member-search').value).toLocaleLowerCase('vi');const genField=$('#member-generation');const previous=genField.value||'all';const values=[...new Set(state.persons.map(p=>generation(p.id)))].sort((a,b)=>a-b);genField.innerHTML='<option value="all">Tất cả các đời</option>'+values.map(g=>`<option value="${g}">Đời ${g}</option>`).join('');genField.value=values.includes(Number(previous))?previous:'all';const g=genField.value;const members=state.persons.filter(p=>(g==='all'||generation(p.id)===Number(g))&&[p.name,p.place,p.born,p.died,p.branch,p.role].join(' ').toLocaleLowerCase('vi').includes(query)).sort((a,b)=>generation(a.id)-generation(b.id)||byName(a,b));$('#member-count').textContent=`Đang hiển thị ${members.length} / ${state.persons.length} hồ sơ`;$('#member-grid').innerHTML=members.map(p=>`<button type="button" class="member-card" data-detail-person="${safe(p.id)}">${coverHtml('persons',p.id,p.name)}<span class="card-eyebrow">ĐỜI ${generation(p.id)} · ${safe(p.branch||'Chưa phân chi')}</span><strong>${safe(p.name)}</strong><small>${safe(years(p))}</small><small>${safe(p.role||'Thành viên phả hệ')}</small><span class="small-link">Xem hồ sơ →</span></button>`).join('')||emptyHtml('Không tìm thấy thành viên','Hãy thử tên khác hoặc chọn một đời khác.')}
