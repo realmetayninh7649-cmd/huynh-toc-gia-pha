@@ -1,0 +1,61 @@
+
+/* Mở rộng Gia phả họ Huỳnh — chỉ định dạng khung cây và hai chuyên mục mới. */
+.tree-person strong{font:800 13.5px/1.43 var(--serif);color:#531922;text-shadow:0 1px 0 rgba(255,250,226,.9)}
+.tree-rank{font-size:10px!important;color:#743d25!important;font-weight:800}
+.tree-person small{font-size:10.5px!important;color:#71402c!important;font-weight:650}
+.tree-generation-label{font-weight:800;box-shadow:0 2px 8px #64232122}
+.tree-toolbar #tree-fit{background:#fff7e6;color:#76232b;border:1px solid #bc945c}
+.tree-view-note{margin:-9px 0 15px;color:#705b45;font-size:11px;line-height:1.8}
+.tree-view-note strong{color:#77242b}
+.heritage-section{margin:60px 0 20px}
+.heritage-heading{display:flex;align-items:end;justify-content:space-between;gap:14px;border-bottom:1px solid #d7be92;margin:0 0 19px;padding-bottom:13px}
+.heritage-heading h2{font:800 clamp(22px,3vw,30px)/1.4 var(--serif);color:var(--wine-deep);margin:5px 0}
+.heritage-heading p{color:#746452;margin:5px 0;font-size:12px;line-height:1.8}
+.heritage-card{display:grid;grid-template-columns:minmax(165px,32%) minmax(0,1fr);background:#fffcf4;border:1px solid #d4bd91;border-radius:7px;box-shadow:0 9px 26px rgba(66,32,19,.07);overflow:hidden}
+.heritage-portrait{position:relative;min-height:265px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#e5d3b5,#f8ebce);border-right:1px solid #d4bd91}
+.heritage-portrait img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 22%}
+.heritage-portrait .fallback{font:700 60px var(--serif);color:#9c754d;opacity:.6}
+.heritage-info{padding:24px 28px;display:flex;flex-direction:column;align-items:flex-start}
+.heritage-info .eyebrow-mini{font:800 10px var(--sans);letter-spacing:.14em;color:#966735}
+.heritage-info h3{font:800 clamp(18px,3vw,25px)/1.5 var(--serif);color:#5d1d25;margin:10px 0}
+.heritage-info p{font-size:12px;line-height:1.9;color:#615244;margin:4px 0}
+.heritage-info .heritage-meta{color:#80462f;font-weight:750}
+.heritage-actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:auto;padding-top:18px}
+.heritage-actions .btn{font-size:11px}
+.heritage-empty{border:1px dashed #cfb48c;background:#fffbf0;border-radius:6px;padding:24px;font-size:12px;line-height:1.9;color:#786350}
+.heritage-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:17px}
+.heritage-mini{display:flex;flex-direction:column;min-width:0;text-align:left;padding:0;overflow:hidden;background:#fffcf6;border:1px solid #dfccb0;border-radius:7px;box-shadow:0 6px 18px #6749230d}
+.heritage-mini:hover{box-shadow:0 12px 24px #67492320}
+.heritage-mini-image{height:172px;background:linear-gradient(140deg,#e2cda5,#f7eccd);display:flex;align-items:center;justify-content:center;color:#88552a;font:700 40px var(--serif)}
+.heritage-mini-image img{height:100%;width:100%;object-fit:cover;object-position:50% 25%}
+.heritage-mini-content{flex:1;display:flex;flex-direction:column;gap:7px;padding:16px}
+.heritage-mini-content small{font-size:10px;color:#875e38;font-weight:700}
+.heritage-mini-content strong{font:800 15px/1.5 var(--serif);color:#61222b}
+.heritage-mini-content p{font-size:11px;color:#66594d;line-height:1.75;margin:0;flex:1}
+.heritage-mini-content .read-link{color:var(--wine);font-weight:800;font-size:11px;margin-top:6px}
+.heritage-pages{padding-top:14px}
+.grave-extra{display:contents}
+.grave-extra[hidden]{display:none!important}
+@media(max-width:760px){
+ .heritage-section{margin-top:40px}
+ .heritage-card{grid-template-columns:35% minmax(0,1fr)}
+ .heritage-portrait{min-height:220px}
+ .heritage-info{padding:16px 13px}
+ .heritage-info h3{font-size:16px}
+ .heritage-info p{font-size:11px}
+ .heritage-actions{padding-top:11px;gap:7px}
+ .heritage-actions .btn{font-size:10px;padding:8px 10px}
+ .heritage-list{grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+ .heritage-mini-image{height:140px}
+ .heritage-mini-content{padding:12px}
+ .heritage-mini-content strong{font-size:13px}
+ .tree-toolbar #tree-fit{min-width:100%}
+}
+@media(max-width:410px){.heritage-card{grid-template-columns:1fr}.heritage-portrait{height:250px;min-height:250px}.heritage-portrait img{object-fit:contain}.heritage-list{grid-template-columns:1fr}}
+@media(min-width:761px) and (max-width:1140px){
+ .mobile-menu{display:block}
+ .main-nav{display:none;position:absolute;top:75px;left:0;right:0;z-index:30;flex-direction:column;align-items:stretch;background:#fffcf6;border-bottom:1px solid var(--line);padding:12px 16px;box-shadow:0 18px 30px #4d26111d}
+ .main-nav.menu-open{display:flex}
+ .main-nav button{text-align:left;padding:11px}
+}
+@media print{.heritage-section,.tree-view-note{display:none!important}}
